@@ -1,12 +1,14 @@
 <template>
   <div class="">
-    
+    <input type="text" v-model="search" />
+    <button @click="pushSearch">Поиск</button>
+    {{ $route.params.page }}
     <news :newsForShow="newsForShow" />
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import News from "../components/News.vue";
 export default {
   components: { News },
@@ -14,29 +16,37 @@ export default {
   data() {
     return {
       users: {},
+      search: "",
     };
-  },
-  created() {
-    this.$router.push({ path: "/1", params: { page: this.currentPage } });
   },
   async fetch({ store }) {
     if (store.getters["news/news"].length === 0) {
       await store.dispatch("news/fetchNews");
     }
   },
+
   computed: {
     ...mapState({
       newsList: (state) => state.news.newsList,
       currentPage: (state) => state.news.currentPage,
-      // newsForShow: (state) => state.news.newsForShow,
+      newsForShow: (state) => state.news.newsForShow,
     }),
     ...mapGetters({
-      newsForShow: "news/newsForShow"
+      newsForShow: "news/newsForShow",
+      currentPage: "news/currentPage",
     }),
-
   },
+  methods: {
+    pushSearch() {
+      this.$router.push({
+        path: "?filter=" + this.search + "/page=" + currentPage,
+      });
+    },
+  },
+
 };
 </script>
-<style scoped>
 
+<style scoped>
+@import url("../static/nullstyle");
 </style>
