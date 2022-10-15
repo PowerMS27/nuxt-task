@@ -4,6 +4,8 @@ export const state = () => ({
   newsForShow: [],
   countOfPostsToShow: 4,
   currentPage: 1,
+  newsDisplayType: "grid",
+  newsSource: "all"
 });
 
 export const mutations = {
@@ -13,6 +15,15 @@ export const mutations = {
   setCurrentPage(state, page) {
     state.currentPage = page;
   },
+  setNewsDisplayType(state, type) {
+    state.newsDisplayType = type
+  },
+  countOfPostsToShow(state, count) {
+    state.countOfPostsToShow = count
+  },
+  setNewsSource(state, source) {
+    state.newsSource = source
+  }
 };
 
 export const actions = {
@@ -30,13 +41,16 @@ export const actions = {
         return 1;
       }
     });
+    // console.log(fullData);
     commit("setNewsList", fullData);
   },
+
 };
 
 export const getters = {
   news: (state) => state.newsList,
   currentPage: (state) => state.currentPage,
+  newsDisplayType: (state) => state.newsDisplayType,
   newsForShow: (state) => {
     let newsForShow = state.newsList.slice(
       state.currentPage * state.countOfPostsToShow -
@@ -45,4 +59,5 @@ export const getters = {
     );
     return newsForShow;
   },
+  newsSource: (state) => state.newsSource,
 };

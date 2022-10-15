@@ -3,7 +3,7 @@
     <ul class="pagination-ul">
       <li>
         <nuxt-link
-          :to="{ params: { page: '1' } }"
+          :to="{ params: { page: '1' }, query: {filter: routerFilter} }"
           :key="1"
           class="pagination-page"
         >
@@ -13,7 +13,7 @@
       <span v-if="this.currentPage > 3">...</span>
       <li v-for="p in this.visiblePages.length" :key="p">
         <nuxt-link
-          :to="{ params: { page: `${visiblePages[p - 1]}` } }"
+          :to="{ params: { page: `${visiblePages[p - 1]}` }, query: {filter: routerFilter} }"
           :key="`${visiblePages[p - 1]}`"
           class="pagination-page"
         >
@@ -23,7 +23,7 @@
       <span v-if="this.currentPage < 20 - 2">...</span>
       <li>
         <nuxt-link
-          :to="{ params: { page: '20' } }"
+          :to="{ params: { page: '20' }, query: {filter: routerFilter} }"
           :key="20"
           class="pagination-page"
         >
@@ -48,6 +48,9 @@ export default {
     ...mapGetters({
       currentPage: "news/currentPage",
     }),
+    routerFilter() {
+      return this.$route.query.filter
+    },
     visiblePages() {
       let visiblePages = [];
 
@@ -109,9 +112,9 @@ export default {
 .pagination-page {
   padding: 8px;
 }
-/* a.nuxt-link-active {
-  color: red
-} */
+a.nuxt-link-active {
+  color: #0029FF;
+}
 a.nuxt-link-exact-active {
   color: #0029FF;
 }

@@ -1,25 +1,32 @@
 <template>
-  <div class="news-card">
+  <div class="news-card" :class="{ column: isColumn }">
     <div class="news-card__column">
-      <a :href="newsItem.link" target="_blank" class="news-card__title">
-        <h2>{{ newsItem.title }}</h2>
-      </a>
-      <div class="news-card__info">
-        <div class="news-card__text-content">
-          <p>{{ newsItem.content }}</p>
-        </div>
-
-        <a :href="newsItem.link" target="_blank" class="news-card__show-more"
-          >Подробнее</a
-        >
-        <div class="news-card__bottom-row">
-          <a :href="urlToMainPage" target="_blank" class="news-card__url">
-            {{ formatedSource }}
+      <div :class="{rowWhenColumn: isColumn}">
+        <a :href="newsItem.link" target="_blank" v-if="isColumn" class="image">
+          <img :src="`${newsItem.enclosure?.url}`" alt="" />
+        </a>
+        <div>
+          <a :href="newsItem.link" target="_blank" class="news-card__title">
+            <h2>{{ newsItem.title }}</h2>
           </a>
-          <div class="news-card__date">
-            <!-- {{ formatedDate }} -->
-            {{newsItem.pubDate}}
+
+          <div class="news-card__info">
+            <div class="news-card__text-content">
+              <p>{{ newsItem.content }}</p>
+            </div>
           </div>
+        </div>
+      </div>
+      <a v-if="newsDisplayType !== 'column'" :href="newsItem.link" target="_blank" class="news-card__show-more"
+        >Подробнее</a
+      >
+      <div class="news-card__bottom-row">
+        <a :href="urlToMainPage" target="_blank" class="news-card__url">
+          {{ formatedSource }}
+        </a>
+        <div class="news-card__date">
+          <!-- {{ formatedDate }} -->
+          {{ newsItem.pubDate }}
         </div>
       </div>
     </div>
@@ -38,6 +45,10 @@ export default {
       type: Object,
       require: true,
     },
+    newsDisplayType: {
+      type: String,
+      require: true,
+    },
   },
   computed: {
     formatedSource() {
@@ -52,6 +63,9 @@ export default {
     formatedDate() {
       return new Date(this.newsItem.pubDate).toLocaleDateString();
     },
+    isColumn() {
+      return this.newsDisplayType == 'column'
+    }
   },
 };
 </script>
@@ -64,17 +78,38 @@ export default {
   border-radius: 3px;
   height: 200px;
 }
-.news-card__column {
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   height: 100%;
+.news-card.column {
+  padding: 18px 30px;
+  height: 180px;
 }
-
+.news-card__column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.image {
+  width: 100%;
+  height: 110px;
+  margin: 10px 0 0 0;
+}
+.image img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.rowWhenColumn {
+  /* display: flex; */
+  /* align-items: center; */
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 0 30px;
+  align-items: flex-start;
+}
 .news-card__title {
-   display: block;
-   display: -webkit-box;
-   -webkit-line-clamp: 2; /* количество строк */
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* количество строк */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

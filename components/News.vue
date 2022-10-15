@@ -1,10 +1,11 @@
 <template>
   <div class="">
-    <div class="news-grid">
+    <div class="news-grid" :class="{column: newsDisplayType == 'column'}">
       <news-item
         v-for="newsItem in newsForShow"
         :key="newsItem.link"
         :newsItem="newsItem"
+        :newsDisplayType="newsDisplayType"
       >
       </news-item>
     </div>
@@ -25,6 +26,10 @@ export default {
       type: Array,
       require: true,
     },
+    newsDisplayType: {
+      type: String,
+      require: true
+    },
   },
 };
 </script>
@@ -33,5 +38,8 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+}
+.news-grid.column {
+  grid-template-columns: 1fr;
 }
 </style>

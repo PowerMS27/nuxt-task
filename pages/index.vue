@@ -17,8 +17,13 @@ export default {
     };
   },
   created() {
-    this.$router.push({ path: "/1", params: { page: this.currentPage } });
+    this.$router.push({ path: "/1", params: { page: this.currentPage }, query: {filter: "all"}});
   },
+  // async asyncData({store}) {
+  //   if (store.getters["news/news"].length === 0) { 
+  //     await store.dispatch("news/fetchNews");
+  //   }
+  // },
   async fetch({ store }) {
     if (store.getters["news/news"].length === 0) {
       await store.dispatch("news/fetchNews");

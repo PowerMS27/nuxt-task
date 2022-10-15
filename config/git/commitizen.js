@@ -33,6 +33,7 @@ module.exports = {
     { name: "tutorial" },
     { name: "catalog" },
     { name: "product" },
+    { name: "pages" },
   ],
 
   // Возможность задать спец ОБЛАСТЬ для определенного типа коммита (пример для 'fix')
