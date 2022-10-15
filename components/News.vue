@@ -9,7 +9,7 @@
       >
       </news-item>
     </div>
-    <news-pagination></news-pagination>
+    <news-pagination :totalPages="totalPages"></news-pagination>
   </div>
 </template>
 <script>
@@ -30,6 +30,10 @@ export default {
       type: String,
       require: true
     },
+    totalPages: {
+      type: Number,
+      require: true
+    }
   },
 };
 </script>

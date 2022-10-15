@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination">
+  <div class="pagination" v-if="this.totalPages > 1">
     <ul class="pagination-ul">
       <li>
         <nuxt-link
@@ -20,14 +20,14 @@
           {{ visiblePages[p - 1] }}
         </nuxt-link>
       </li>
-      <span v-if="this.currentPage < 20 - 2">...</span>
+      <span v-if="this.currentPage < totalPages - 2">...</span>
       <li>
         <nuxt-link
-          :to="{ params: { page: '20' }, query: {filter: routerFilter} }"
-          :key="20"
+          :to="{ params: { page: `${totalPages}` }, query: {filter: routerFilter} }"
+          :key="`${totalPages}`"
           class="pagination-page"
         >
-          20
+          {{totalPages}}
         </nuxt-link>
       </li>
     </ul>
@@ -37,6 +37,12 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 export default {
+  props: {
+    totalPages: {
+      type: Number,
+      require: true
+    }
+  },
   data() {
     return {
     };
@@ -53,25 +59,27 @@ export default {
     },
     visiblePages() {
       let visiblePages = [];
-
+      if (this.totalPages < 6) {
+        return visiblePages = [...Array(this.totalPages).keys()].slice(1, this.totalPages - 1).map(x => ++x);
+      }
       if (this.currentPage < 4) {
         visiblePages.push(2, 3, 4);
       }
-      if (this.currentPage > 3 && this.currentPage < 20 - 1) {
+      if (this.currentPage > 3 && this.currentPage < this.totalPages - 1) {
         visiblePages.push(
           +this.currentPage - 1,
           +this.currentPage,
           +this.currentPage + 1
         );
       }
-      if (this.currentPage > 20 - 2 && this.currentPage < 20) {
+      if (this.currentPage > this.totalPages - 2 && this.currentPage < this.totalPages) {
         visiblePages.push(
           +this.currentPage - 2,
           +this.currentPage - 1,
           +this.currentPage
         );
       }
-      if (this.currentPage == 20) {
+      if (this.currentPage == this.totalPages) {
         visiblePages.push(
           +this.currentPage - 3,
           +this.currentPage - 2,

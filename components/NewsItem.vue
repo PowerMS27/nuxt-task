@@ -1,7 +1,9 @@
 <template>
+  
   <div class="news-card" :class="{ column: isColumn }">
     <div class="news-card__column">
-      <div :class="{rowWhenColumn: isColumn}">
+      
+      <div :class="{ rowWhenColumn: isColumn }">
         <a :href="newsItem.link" target="_blank" v-if="isColumn" class="image">
           <img :src="`${newsItem.enclosure?.url}`" alt="" />
         </a>
@@ -17,7 +19,11 @@
           </div>
         </div>
       </div>
-      <a v-if="newsDisplayType !== 'column'" :href="newsItem.link" target="_blank" class="news-card__show-more"
+      <a
+        v-if="newsDisplayType !== 'column'"
+        :href="newsItem.link"
+        target="_blank"
+        class="news-card__show-more"
         >Подробнее</a
       >
       <div class="news-card__bottom-row">
@@ -64,14 +70,15 @@ export default {
       return new Date(this.newsItem.pubDate).toLocaleDateString();
     },
     isColumn() {
-      return this.newsDisplayType == 'column'
-    }
+      return this.newsDisplayType == "column";
+    },
   },
 };
 </script>
 
 <style scoped>
 .news-card {
+  position: relative;
   background: #ffffff;
   padding: 25px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.05);
@@ -79,8 +86,25 @@ export default {
   height: 200px;
 }
 .news-card.column {
-  padding: 18px 30px;
-  height: 180px;
+  padding: 18px 30px 5px 30px;
+  height: 170px;
+}
+.news-card__date {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #dcdcdc;
+}
+.news-card.column::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 30px;
+  bottom: 0;
+  left: 0;
+  background: #fcfcfc;
+  border-radius: 0px 0px 3px 3px;
+  z-index: 0;
 }
 .news-card__column {
   display: flex;
@@ -147,6 +171,10 @@ export default {
   margin: 20px 0 0 0;
   display: flex;
   justify-content: space-between;
+  z-index: 5;
+}
+.news-card.column .news-card__bottom-row {
+  margin: 0;
 }
 .news-card__url {
   font-weight: 400;

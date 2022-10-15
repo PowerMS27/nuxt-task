@@ -1,11 +1,12 @@
 import RSSParser from "rss-parser";
+import VueRouter from 'vue-router';
 export const state = () => ({
   newsList: [],
   newsForShow: [],
   countOfPostsToShow: 4,
   currentPage: 1,
   newsDisplayType: "grid",
-  newsSource: "all"
+  newsSource: "all",
 });
 
 export const mutations = {
@@ -51,13 +52,18 @@ export const getters = {
   news: (state) => state.newsList,
   currentPage: (state) => state.currentPage,
   newsDisplayType: (state) => state.newsDisplayType,
-  newsForShow: (state) => {
-    let newsForShow = state.newsList.slice(
-      state.currentPage * state.countOfPostsToShow -
-        (state.countOfPostsToShow - 1),
-      state.currentPage * state.countOfPostsToShow + 1
-    );
-    return newsForShow;
-  },
+  // filteredNews: (state, $route) => {
+  //   return state.newsList.filter((post) => {
+  //     post.link.toUpperCase().includes($route.query.filter.toUpperCase())
+  //   })
+  // },
+  // newsForShow: (state, getters) => {
+  //   let newsForShow = getters.filteredNews.slice(
+  //     state.currentPage * state.countOfPostsToShow -
+  //       (state.countOfPostsToShow - 1),
+  //     state.currentPage * state.countOfPostsToShow + 1
+  //   );
+  //   return newsForShow;
+  // },
   newsSource: (state) => state.newsSource,
 };
