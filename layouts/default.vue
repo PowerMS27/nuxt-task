@@ -1,13 +1,13 @@
 <template>
   <main class="main">
     <div class="container">
-      <div>
+      <!-- <div>
         <h1>Список новостей</h1>
         <button>*обновить*</button>
       </div>
       <input type="text" />
       <button>Поиск</button>
-      {{ $route.params.page }}
+      {{ $route.params.page }} -->
       <Nuxt />
     </div>
   </main>
@@ -29,6 +29,7 @@ export default {
   methods: {
     ...mapMutations({
       setCurrentPage: "news/setCurrentPage",
+      setNewsFilter: "news/setNewsFilter",
     }),
     // async refresh() {
     //   await this.$store.dispatch("news/fetchNews")
@@ -39,6 +40,9 @@ export default {
     $route(to, from) {
       this.$store.commit("news/setCurrentPage", to.params.page);
     },
+    '$route.query.filter'(to, from) {
+      this.$store.commit("news/setNewsFilter", to)
+    }
   },
 };
 </script>

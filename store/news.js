@@ -1,12 +1,12 @@
 import RSSParser from "rss-parser";
-import VueRouter from 'vue-router';
 export const state = () => ({
   newsList: [],
   newsForShow: [],
   countOfPostsToShow: 4,
-  currentPage: 1,
+  currentPage: "",
   newsDisplayType: "grid",
-  newsSource: "all",
+  newsFilter: "all",
+  newsSearch: "",
 });
 
 export const mutations = {
@@ -22,8 +22,11 @@ export const mutations = {
   countOfPostsToShow(state, count) {
     state.countOfPostsToShow = count
   },
-  setNewsSource(state, source) {
-    state.newsSource = source
+  setNewsFilter(state, source) {
+    state.newsFilter = source
+  },
+  setNewsSearch(state, search) {
+    state.newsSearch = search
   }
 };
 
@@ -42,7 +45,6 @@ export const actions = {
         return 1;
       }
     });
-    // console.log(fullData);
     commit("setNewsList", fullData);
   },
 
@@ -65,5 +67,6 @@ export const getters = {
   //   );
   //   return newsForShow;
   // },
-  newsSource: (state) => state.newsSource,
+  newsFilter: (state) => state.newsFilter,
+  newsSearch: (state) => state.newsSearch,
 };

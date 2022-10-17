@@ -28,23 +28,10 @@
         :class="{ active: newsDisplayType == 'grid' }"
       />
     </label>
-    <!-- <div class="" @click="setColumn">
-      <ColumnSvg
-        class="change-display__button"
-        :class="{ active: newsDisplayType == 'column' }"
-      />
-    </div>
-    <div class="" @click="setGrid">
-      <GridSvg
-        class="change-display__button"
-        :class="{ active: newsDisplayType == 'grid' }"
-      />
-    </div> -->
   </div>
 </template>
 
 <script>
-// import { mapState, mapGetters, mapMutations } from "vuex";
 import ColumnSvg from "./icons/columnSvg.vue";
 import GridSvg from "./icons/gridSvg.vue";
 export default {

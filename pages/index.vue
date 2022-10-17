@@ -1,7 +1,7 @@
 <template>
   <div class="">
     
-    <news :newsForShow="newsForShow" />
+    <!-- <news :newsForShow="newsForShow" /> -->
   </div>
 </template>
 
@@ -17,13 +17,11 @@ export default {
     };
   },
   created() {
-    this.$router.push({ path: "/1", params: { page: this.currentPage }, query: {filter: "all"}});
+    const query =  { filter: "all" };
+    this.newsSearch !== '' ? query.search = this.newsSearch : null;
+    const queryParams =  {path: "/1", params: { page: this.currentPage }, query};
+    this.$router.push(queryParams);
   },
-  // async asyncData({store}) {
-  //   if (store.getters["news/news"].length === 0) { 
-  //     await store.dispatch("news/fetchNews");
-  //   }
-  // },
   async fetch({ store }) {
     if (store.getters["news/news"].length === 0) {
       await store.dispatch("news/fetchNews");
@@ -33,10 +31,10 @@ export default {
     ...mapState({
       newsList: (state) => state.news.newsList,
       currentPage: (state) => state.news.currentPage,
-      // newsForShow: (state) => state.news.newsForShow,
     }),
     ...mapGetters({
-      newsForShow: "news/newsForShow"
+      currentPage: "news/currentPage",
+      newsSearch: "news/newsSearch",
     }),
 
   },

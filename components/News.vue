@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="news-grid" :class="{column: newsDisplayType == 'column'}">
+    <div class="news-grid" :class="{ column: newsDisplayType == 'column' }">
       <news-item
         v-for="newsItem in newsForShow"
         :key="newsItem.link"
@@ -9,7 +9,11 @@
       >
       </news-item>
     </div>
-    <news-pagination :totalPages="totalPages"></news-pagination>
+    <news-pagination
+      :totalPages="totalPages"
+      :newsFilter="newsFilter"
+      :newsSearch="newsSearch"
+    ></news-pagination>
   </div>
 </template>
 <script>
@@ -28,12 +32,20 @@ export default {
     },
     newsDisplayType: {
       type: String,
-      require: true
+      require: true,
     },
     totalPages: {
       type: Number,
+      require: true,
+    },
+    newsFilter: {
+      type: String,
       require: true
-    }
+    },
+    newsSearch: {
+      type: String,
+      require: true
+    },
   },
 };
 </script>

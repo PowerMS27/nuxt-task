@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <label class="filter-button" :class="{ active: newsSource === 'all' }">
+    <label class="filter-button" :class="{ active: newsFilter === 'all' }">
       <input
         type="radio"
         class="radiobutton"
@@ -10,7 +10,7 @@
       />
       Все
     </label>
-    <label class="filter-button" :class="{ active: newsSource === 'lenta' }">
+    <label class="filter-button" :class="{ active: newsFilter === 'lenta' }">
       <input
         type="radio"
         class="radiobutton"
@@ -20,7 +20,7 @@
       />
       Lenta.ru
     </label>
-    <label class="filter-button" :class="{ active: newsSource === 'mos' }">
+    <label class="filter-button" :class="{ active: newsFilter === 'mos' }">
       <input
         type="radio"
         class="radiobutton"
@@ -36,7 +36,7 @@
 <script>
 export default {
   props: {
-    newsSource: {
+    newsFilter: {
       type: String,
       require: true,
     },
