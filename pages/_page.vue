@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <header-news @search="search" />
+    <header-news @search="search" @refresh="refresh" />
     <div class="row">
       <news-filter
         :newsFilter="newsFilter"
@@ -26,28 +26,54 @@
 </template>
 
 <script>
+import RSSParser from "rss-parser";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import News from "../components/News.vue";
 import ChangeDisplay from "~/components/ChangeDisplay.vue";
 import NewsFilter from "~/components/NewsFilter.vue";
 import HeaderNews from "../components/HeaderNews.vue";
 import EmptyState from "../components/EmptyState.vue";
+
 export default {
   components: { News, ChangeDisplay, NewsFilter, HeaderNews, EmptyState },
   name: "IndexPage",
+  // middleware: 'route',
+  middleware: "route",
   data() {
     return {
       loaded: false,
       clicked: false,
     };
   },
-  async fetch({ store }) {
-    if (store.getters["news/news"].length === 0) {
-      await store.dispatch("news/fetchNews");
-    }
-  },
+  // async fetch() {
+  //   let parser = new RSSParser();
+  //   const dataMos = await parser.parseURL("https://www.mos.ru/rss");
+  //   const dataLenta = await parser.parseURL("https://lenta.ru/rss/news");
+  //   let fullData = dataMos.items.concat(dataLenta.items);
 
-  mounted() {
+  //   fullData = fullData.sort((a, b) => {
+  //     if (new Date(`${a.pubDate}`) > new Date(`${b.pubDate}`)) {
+  //       return -1;
+  //     }
+  //     if (new Date(`${a.pubDate}`) < new Date(`${b.pubDate}`)) {
+  //       return 1;
+  //     }
+  //   });
+  //   this.$store.commit("news/setNewsList", fullData);
+  // },
+  // async asyncData({app, store}) {
+  //   // if (store.getters["news/news"].length === 0) {
+  //     let news = await app.$axios.$get('https://127.0.0.1:80/api/getNews/getNews');
+  //     store.commit("news/setNewsList", news);
+  //   // }
+  // },
+
+  async mounted() {
+    if (this.news.length === 0) {
+      let news = await this.$axios.$get("api/getNews/getNews");
+      this.$store.commit("news/setNewsList", news);
+    }
+
     this.$store.commit("news/setCurrentPage", this.$route.params.page);
     this.$store.commit("news/setNewsFilter", this.$route.query.filter);
     if (this.$route.query.search) {
@@ -61,7 +87,7 @@ export default {
       newsList: (state) => state.news.newsList,
       currentPage: (state) => state.news.currentPage,
       newsDisplayType: (state) => state.news.newsDisplayType,
-      countOfPostsToShow: (state) => state.news.countOfPostsToShow,
+      visiblePostsCount: (state) => state.news.visiblePostsCount,
     }),
     ...mapGetters({
       currentPage: "news/currentPage",
@@ -86,16 +112,16 @@ export default {
     },
     newsForShow() {
       let newsForShow = this.searchedAndFilteredNews.slice(
-        this.currentPage * this.countOfPostsToShow -
-          (this.countOfPostsToShow - 1) -
+        this.currentPage * this.visiblePostsCount -
+          (this.visiblePostsCount - 1) -
           1,
-        this.currentPage * this.countOfPostsToShow
+        this.currentPage * this.visiblePostsCount
       );
       return newsForShow;
     },
     totalPages() {
       return Math.ceil(
-        this.searchedAndFilteredNews.length / this.countOfPostsToShow
+        this.searchedAndFilteredNews.length / this.visiblePostsCount
       );
     },
   },
@@ -116,13 +142,23 @@ export default {
       this.$store.commit("news/setNewsDisplayType", newVal);
     },
     search(value) {
-      console.log(value);
       this.$store.commit("news/setNewsSearch", value);
       this.$router.push({
-        path: `${this.currentPage}`,
-        params: { page: this.currentPage },
+        path: "/1",
+        params: { page: 1 },
         query: { filter: this.newsFilter, search: value },
       });
+    },
+    async refresh() {
+      let news = await this.$axios.$get("api/getNews/getNews");
+      this.$store.commit("news/setNewsList", news);
+      this.$store.commit("news/setNewsSearch", "");
+      this.$router.push({
+        path: "/1",
+        params: { page: 1 },
+        query: { filter: "all", },
+      });
+      
     },
   },
   watch: {
@@ -130,19 +166,23 @@ export default {
       localStorage.newsDisplayType = newVal;
 
       if (newVal == "column") {
-        this.$store.commit("news/countOfPostsToShow", 3);
+        this.$store.commit("news/visiblePostsCount", 3);
       } else {
-        this.$store.commit("news/countOfPostsToShow", 4);
+        this.$store.commit("news/visiblePostsCount", 4);
       }
     },
     newsFilter() {
-      this.$router.push({
-        path: `${this.$route.params.page}`,
+      const query = { filter: this.newsFilter };
+      this.newsSearch !== "" ? (query.search = this.newsSearch) : null;
+      console.log("1");
+      const queryParams = {
+        path: `${this.currentPage}`,
         params: { page: this.currentPage },
-        query: { filter: this.newsFilter, search: this.newsSearch },
-      });
+        query,
+      };
+      this.$router.push(queryParams);
     },
-    countOfPostsToShow(newVal, oldVal) {
+    visiblePostsCount(newVal, oldVal) {
       if (this.clicked) {
         let newPage;
         if (oldVal) {
@@ -156,7 +196,6 @@ export default {
 
         const query = { filter: this.newsFilter };
         this.newsSearch !== "" ? (query.search = this.newsSearch) : null;
-        console.log(this.newsSearch);
         const queryParams = {
           path: `${newPage}`,
           params: { page: this.currentPage },

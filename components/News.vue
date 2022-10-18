@@ -17,7 +17,6 @@
   </div>
 </template>
 <script>
-// import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import NewsItem from "./NewsItem.vue";
 import NewsPagination from "./NewsPagination.vue";
 export default {
