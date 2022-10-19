@@ -1,7 +1,5 @@
 <template>
   <div class="change-display">
-
-
     <label class="filter-button">
       <input
         type="radio"
@@ -39,22 +37,20 @@ export default {
   props: {
     newsDisplayType: {
       type: String,
-      require: true
-    }
+      require: true,
+    },
   },
-  
 };
 </script>
 
 <style scoped>
 .change-display {
   display: flex;
-  /* justify-content: flex-end; */
 }
 .change-display__button {
   cursor: pointer;
   fill: #c4c4c4;
-  transition: all .4s ease;
+  transition: all 0.4s ease;
   margin: 0 0 0 10px;
 }
 .active {

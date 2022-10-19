@@ -18,7 +18,7 @@ export default {
   css: ["~/static/nullstyle.css"],
 
   loading: {
-    color: "blue",
+    color: "#0029FF",
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -30,13 +30,8 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "@nuxtjs/proxy"],
-  // axios: {
-  //   baseURL: "/",
-  //   prefix: '/api',
-  //   credentials: true,
-  //   // debug: true
-  // },
+  modules: ["@nuxtjs/axios"],
+
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

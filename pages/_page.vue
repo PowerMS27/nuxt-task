@@ -4,7 +4,7 @@
     <div class="row">
       <news-filter
         :newsFilter="newsFilter"
-        @changeSource="changeSource"
+        @changeFilter="changeFilter"
         v-if="this.loaded"
       />
       <change-display
@@ -26,8 +26,7 @@
 </template>
 
 <script>
-import RSSParser from "rss-parser";
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import News from "../components/News.vue";
 import ChangeDisplay from "~/components/ChangeDisplay.vue";
 import NewsFilter from "~/components/NewsFilter.vue";
@@ -37,7 +36,6 @@ import EmptyState from "../components/EmptyState.vue";
 export default {
   components: { News, ChangeDisplay, NewsFilter, HeaderNews, EmptyState },
   name: "IndexPage",
-  // middleware: 'route',
   middleware: "route",
   data() {
     return {
@@ -45,32 +43,16 @@ export default {
       clicked: false,
     };
   },
-  // async fetch() {
-  //   let parser = new RSSParser();
-  //   const dataMos = await parser.parseURL("https://www.mos.ru/rss");
-  //   const dataLenta = await parser.parseURL("https://lenta.ru/rss/news");
-  //   let fullData = dataMos.items.concat(dataLenta.items);
-
-  //   fullData = fullData.sort((a, b) => {
-  //     if (new Date(`${a.pubDate}`) > new Date(`${b.pubDate}`)) {
-  //       return -1;
-  //     }
-  //     if (new Date(`${a.pubDate}`) < new Date(`${b.pubDate}`)) {
-  //       return 1;
-  //     }
-  //   });
-  //   this.$store.commit("news/setNewsList", fullData);
-  // },
   // async asyncData({app, store}) {
   //   // if (store.getters["news/news"].length === 0) {
-  //     let news = await app.$axios.$get('https://127.0.0.1:80/api/getNews/getNews');
+  //     let news = await app.$axios.$get('https://127.0.0.1:80/api/getPosts/getPosts');
   //     store.commit("news/setNewsList", news);
   //   // }
   // },
 
   async mounted() {
     if (this.news.length === 0) {
-      let news = await this.$axios.$get("api/getNews/getNews");
+      let news = await this.$axios.$get("api/getPosts/getPosts");
       this.$store.commit("news/setNewsList", news);
     }
 
@@ -79,7 +61,10 @@ export default {
     if (this.$route.query.search) {
       this.$store.commit("news/setNewsSearch", this.$route.query.search);
     }
-    this.$store.commit("news/setNewsDisplayType", localStorage.newsDisplayType);
+    this.$store.commit(
+      "news/setNewsDisplayType",
+      localStorage.newsDisplayType ? localStorage.newsDisplayType : "grid"
+    );
     this.loaded = true;
   },
   computed: {
@@ -98,10 +83,24 @@ export default {
     filteredNews() {
       if (this.newsFilter == "all") {
         return this.news;
-      } else
-        return this.news.filter((post) =>
-          post.link.toUpperCase().includes(this.newsFilter.toUpperCase())
+      } else {
+        let filterArray = this.newsFilter.split(" ");
+        return this.news.filter(
+          (post) =>
+            post.link
+              .replace("https://", "")
+              .replace("http://", "")
+              .split("/")[0]
+              .toUpperCase()
+              .includes(filterArray[0].toUpperCase()) ||
+            post.link
+              .replace("https://", "")
+              .replace("http://", "")
+              .split("/")[0]
+              .toUpperCase()
+              .includes(filterArray[1]?.toUpperCase())
         );
+      }
     },
     searchedAndFilteredNews() {
       return this.filteredNews.filter(
@@ -127,7 +126,7 @@ export default {
   },
 
   methods: {
-    changeSource(newVal) {
+    changeFilter(newVal) {
       const query = { filter: newVal };
       this.newsSearch !== "" ? (query.search = this.newsSearch) : null;
       const queryParams = {
@@ -150,18 +149,23 @@ export default {
       });
     },
     async refresh() {
-      let news = await this.$axios.$get("api/getNews/getNews");
+      let news = await this.$axios.$get("api/getPosts/getPosts");
       this.$store.commit("news/setNewsList", news);
       this.$store.commit("news/setNewsSearch", "");
       this.$router.push({
         path: "/1",
         params: { page: 1 },
-        query: { filter: "all", },
+        query: { filter: "all" },
       });
-      
     },
   },
   watch: {
+    $route(to, from) {
+      this.$store.commit("news/setCurrentPage", to.params.page);
+    },
+    "$route.query.filter"(to, from) {
+      this.$store.commit("news/setNewsFilter", to);
+    },
     newsDisplayType(newVal) {
       localStorage.newsDisplayType = newVal;
 
@@ -174,7 +178,6 @@ export default {
     newsFilter() {
       const query = { filter: this.newsFilter };
       this.newsSearch !== "" ? (query.search = this.newsSearch) : null;
-      console.log("1");
       const queryParams = {
         path: `${this.currentPage}`,
         params: { page: this.currentPage },
@@ -214,5 +217,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 25px 0;
+}
+@media (max-width: 840px) {
+  .row {
+    margin: 20px 0 15px 0;
+  }
 }
 </style>

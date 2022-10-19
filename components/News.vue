@@ -39,11 +39,11 @@ export default {
     },
     newsFilter: {
       type: String,
-      require: true
+      require: true,
     },
     newsSearch: {
       type: String,
-      require: true
+      require: true,
     },
   },
 };
@@ -56,5 +56,10 @@ export default {
 }
 .news-grid.column {
   grid-template-columns: 1fr;
+}
+@media (max-width: 840px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

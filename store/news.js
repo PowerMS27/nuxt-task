@@ -17,17 +17,17 @@ export const mutations = {
     state.currentPage = page;
   },
   setNewsDisplayType(state, type) {
-    state.newsDisplayType = type
+    state.newsDisplayType = type;
   },
   visiblePostsCount(state, count) {
-    state.visiblePostsCount = count
+    state.visiblePostsCount = count;
   },
   setNewsFilter(state, source) {
-    state.newsFilter = source
+    state.newsFilter = source;
   },
   setNewsSearch(state, search) {
-    state.newsSearch = search
-  }
+    state.newsSearch = search;
+  },
 };
 
 // export const actions = {

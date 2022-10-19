@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import SearchSvg from "./icons/searchSvg.vue";
 export default {
   data() {
@@ -21,6 +22,18 @@ export default {
     };
   },
   components: { SearchSvg },
+  computed: {
+    ...mapGetters({
+      newsSearch: "news/newsSearch",
+    }),
+  },
+  watch: {
+    newsSearch() {
+      if (this.newsSearch == "") {
+        this.input = "";
+      }
+    },
+  },
 };
 </script>
 
@@ -38,13 +51,13 @@ export default {
   fill: #0029ff;
 }
 .search-input__input {
-  
+  position: relative;
   background: #ffffff;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.05);
   border-radius: 3px;
-  padding: 10px;
+  padding: 11px;
   font-size: 16px;
-  width: 300px !important;
+  width: 297px;
 }
 .search-input__input:focus {
   border: none;
@@ -53,6 +66,14 @@ export default {
 .search-input__btn {
   position: absolute;
   right: 13px;
-  top: 9px;
+  top: 10px;
+}
+@media (max-width: 840px) {
+  .search-input__input {
+    width: 100%;
+  }
+  .search-input {
+    margin: 20px 0 0 0;
+  }
 }
 </style>

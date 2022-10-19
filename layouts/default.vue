@@ -1,59 +1,25 @@
 <template>
   <main class="main">
     <div class="container">
-      <!-- <div>
-        <h1>Список новостей</h1>
-        <button>*обновить*</button>
-      </div>
-      <input type="text" />
-      <button>Поиск</button>
-      {{ $route.params.page }} -->
       <Nuxt />
     </div>
   </main>
 </template>
-<script>
-import { mapState, mapGetters, mapMutations, Store } from "vuex";
-export default {
-  // async fetch({ store }) {
-  //   if (store.getters["news/news"].length === 0) {
-  //     await store.dispatch("news/fetchNews");
-  //   };
-  // },
-
-  computed: {
-    // updateActiveRoute() {
-    //   return this.$route.params.page;
-    // },
-  },
-  methods: {
-    ...mapMutations({
-      setCurrentPage: "news/setCurrentPage",
-      setNewsFilter: "news/setNewsFilter",
-    }),
-    // async refresh() {
-    //   await this.$store.dispatch("news/fetchNews")
-      
-    // },
-  },
-  watch: {
-    $route(to, from) {
-      this.$store.commit("news/setCurrentPage", to.params.page);
-    },
-    '$route.query.filter'(to, from) {
-      this.$store.commit("news/setNewsFilter", to)
-    }
-  },
-};
-</script>
 <style>
-.main {
-  padding: 35px 0;
-  height: calc(100vh - 70px);
+html {
   background: #fbfbfb;
+}
+.main {
+  padding: 15px 0 40px 0;
 }
 .container {
   margin: 0 auto;
   max-width: 1060px;
+  padding: 0 20px;
+}
+@media (max-width: 340px) {
+  .container {
+    padding: 0 15px;
+  }
 }
 </style>
